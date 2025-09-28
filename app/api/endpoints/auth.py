@@ -54,7 +54,7 @@ def register(user_in: UserLogin, response: Response, db: Session = Depends(get_d
     return {"success": True, "message": "Login Successfully"}
 
 @router.post("/logout")
-def logout(response: Response):
+def logout(response: Response, current_user=Depends(get_current_user)):
     response.delete_cookie(key="token", path="/")
     return {"success": "true", "message": "Logged out"}
 
