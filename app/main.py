@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.endpoints import auth
+from app.api.endpoints import auth, warehouses
 
 app = FastAPI()
 
@@ -24,3 +24,4 @@ def root():
 
 app.include_router(router)
 app.include_router(auth.router)
+app.include_router(warehouses.router)

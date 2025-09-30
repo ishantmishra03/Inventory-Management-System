@@ -4,14 +4,13 @@ from app.core.security import verify_token
 from app.schemas.user import UserOut
 from app.db.crud.user import get_user_by_email
 from sqlalchemy.orm import Session
-from app.db.session import SessionLocal
 from typing import Generator
 from app.db.deps import get_db
         
 async def get_current_user(request: Request, db: Session = Depends(get_db)) -> UserOut:
     token = request.cookies.get("token")
     if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Autneticated")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authenticated")
     
     token_data = verify_token(token)
     email: str = token_data.get("sub")
@@ -20,7 +19,7 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)) -> U
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     
     
-    return UserOut(**user_doc)
+    return UserOut.from_orm(user_doc)
 
 def get_current_admin_user(current_user: UserOut = Depends(get_current_user)):
     if not current_user.is_admin:

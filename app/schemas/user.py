@@ -12,6 +12,9 @@ class UserOut(BaseModel):
     is_active: bool
     is_admin: bool
 
+    class Config:
+        from_attributes = True
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
